@@ -50,3 +50,5 @@ const data = [
     answer: "こぐれ"
   }
 ]
+
+export default data
