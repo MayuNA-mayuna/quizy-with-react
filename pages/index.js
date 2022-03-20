@@ -4,30 +4,49 @@ import Image from "next/image"
 import { useState } from "react"
 
 const Home = () => {
-  const [buttonDisabled, setButtonDisabled] = useState(false)
+  const [answerIsShown, setAnswerIsShown] = useState(false)
+  const [isRightAnswer, setIsRightAnswer] = useState(false)
+
+  const defaultButtonStyle = [
+    { variant: 'outlined', color: 'primary' },
+    { variant: 'outlined', color: 'primary' },
+    { variant: 'outlined', color: 'primary' },
+  ]
+  const [buttonStyle, setButtonStyle] = useState(defaultButtonStyle)
 
   const id = data[0].id
   const choices = data[0].choices
   const answer = data[0].answer
 
-  const judgeAnswer = (e) => {
-    console.log(e.target.innerText)
-    const userChoice = e.target.innerText
-    if (userChoice === answer) {
+  const judgeAnswer = (choiceIndex) => {
+    if (answerIsShown) return
+    setAnswerIsShown(true)
+    setButtonStyleFromAnswer(choiceIndex)
+    if (choiceIndex === answer) {
       console.log('Right Answer!')
-      setButtonDisabled(true)
+      setIsRightAnswer(true)
     }
+  }
+
+  const setButtonStyleFromAnswer = (choiceIndex) => {
+    const buttonStyle = defaultButtonStyle
+    const buttonStyleUpdated = buttonStyle.map((style, index) => {
+      if (index === answer) return { variant: 'contained', color: 'primary' }
+      if (index === answer || choiceIndex === index) return { variant: 'contained', color: 'secondary' }
+      return style
+    })
+    setButtonStyle(buttonStyleUpdated)
   }
 
   return (
     <>
       <Container maxWidth="sm">
-        <Box sx={{mt: 5}}>
+        <Box sx={{mt: 5, mb: 6}}>
           <Typography variant="h6" align="center" fontWeight="bold">
             ガチで東京の人しか解けない！ #東京の難読地名クイズ
           </Typography>
         </Box>
-        <Box sx={{mt: 6}}>
+        <Box sx={{mb: 5}}>
           <Typography fontWeight="bold">
             { id }. この地名はなんて読む？
           </Typography>
@@ -39,25 +58,39 @@ const Home = () => {
             <Image src="/img/kuizy01.png" width="620" height="372" />
           </Box>
           <Box sx={{width: '100%'}}>
-            {choices.map(choice => {
+            {choices.map((choice, index) => {
               return (
-                <Box sx={{width: '100%', mb: 2}} key={choice}>
+                <Box sx={{width: '100%', mb: 2}}>
                   <Button
-                    variant="outlined"
+                    variant={buttonStyle[index].variant}
                     fullWidth={true}
+                    color={buttonStyle[index].color}
                     sx={{
-                        justifyContent: 'start',
-                        py: 1,
-                        fontWeight: 'bold'
+                      justifyContent: 'start',
+                      py: 1,
+                      fontWeight: 'bold',
                     }}
-                    onClick={judgeAnswer}
-                    disabled={buttonDisabled}
+                    onClick={() => judgeAnswer(index)}
                   >
                     {choice}
                   </Button>
                 </Box>
               )
             })}
+            <Box borderRadius={2} p={2} sx={{backgroundColor: '#f5f5f5'}}>
+              {Boolean(answerIsShown && isRightAnswer)
+                &&
+                <Box>
+                  <Typography sx={{ fontWeight: 'bold', borderBottom: '3px solid #1976d2', display: 'block', width: 'fit-content', mb: 2 }}>正解！</Typography>
+                  <Typography>正解は「{ choices[answer] }」です！</Typography>
+                </Box>}
+              {Boolean(answerIsShown && !isRightAnswer)
+                &&
+                <Box>
+                  <Typography sx={{ fontWeight: 'bold', borderBottom: '3px solid #9c27b0', display: 'block', width: 'fit-content', mb: 2 }}>不正解！</Typography>
+                  <Typography>正解は「{ choices[answer] }」です！</Typography>
+                </Box>}
+            </Box>
           </Box>
         </Box>
       </Container>
