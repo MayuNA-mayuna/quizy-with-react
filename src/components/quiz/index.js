@@ -1,7 +1,9 @@
-import { Box, Button, Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import { useState } from "react"
+import Answer from "../answer"
+import ChoiceList from "../choiceList"
 
-const Quiz = ({datum}) => {
+const Quiz = ({ datum }) => {
   const [answerIsShown, setAnswerIsShown] = useState(false)
   const [isRightAnswer, setIsRightAnswer] = useState(false)
 
@@ -14,23 +16,22 @@ const Quiz = ({datum}) => {
 
   const id = datum.id
   const choices = datum.choices
-  const answer = datum.answer
+  const answerIndex = datum.answerIndex
 
-  const judgeAnswer = (choiceIndex) => {
+  const handleClick = (choiceIndex) => {
     if (answerIsShown) return
     setAnswerIsShown(true)
-    setButtonStyleFromAnswer(choiceIndex)
-    if (choiceIndex === answer) {
-      console.log('Right Answer!')
-      setIsRightAnswer(true)
-    }
+    judgeAnswer(choiceIndex)
   }
 
-  const setButtonStyleFromAnswer = (choiceIndex) => {
+  const judgeAnswer = (choiceIndex) => {
+    if (choiceIndex === answerIndex) {
+      setIsRightAnswer(true)
+    }
     const buttonStyle = defaultButtonStyle
     const buttonStyleUpdated = buttonStyle.map((style, index) => {
-      if (index === answer) return { variant: 'contained', color: 'primary' }
-      if (index === answer || choiceIndex === index) return { variant: 'contained', color: 'secondary' }
+      if (index === answerIndex) return { variant: 'contained', color: 'primary' }
+      if (index === choiceIndex) return { variant: 'contained', color: 'secondary' }
       return style
     })
     setButtonStyle(buttonStyleUpdated)
@@ -50,37 +51,19 @@ const Quiz = ({datum}) => {
             <img src={`/img/kuizy${("0" + id).slice(-2)}.png`} width="620" />
           </Box>
           <Box sx={{width: '100%'}}>
-            {choices.map((choice, index) => {
-              return (
-                <Box sx={{width: '100%', mb: 2}}>
-                  <Button
-                    variant={buttonStyle[index].variant}
-                    fullWidth={true}
-                    color={buttonStyle[index].color}
-                    sx={{
-                      justifyContent: 'start',
-                      py: 1,
-                      fontWeight: 'bold',
-                    }}
-                    onClick={() => judgeAnswer(index)}
-                  >
-                    {choice}
-                  </Button>
-                </Box>
-              )
-            })}
-            {Boolean(answerIsShown && isRightAnswer)
+            <ChoiceList
+              choices={choices}
+              buttonStyle={buttonStyle}
+              handleClick={handleClick}
+            />
+            {
+              answerIsShown
               &&
-              <Box borderRadius={2} p={2} sx={{backgroundColor: '#f5f5f5'}}>
-                <Typography sx={{ fontWeight: 'bold', borderBottom: '3px solid #1976d2', display: 'block', width: 'fit-content', mb: 2 }}>正解！</Typography>
-                <Typography>正解は「{ choices[answer] }」です！</Typography>
-              </Box>}
-            {Boolean(answerIsShown && !isRightAnswer)
-              &&
-              <Box borderRadius={2} p={2} sx={{backgroundColor: '#f5f5f5'}}>
-                <Typography sx={{ fontWeight: 'bold', borderBottom: '3px solid #9c27b0', display: 'block', width: 'fit-content', mb: 2 }}>不正解！</Typography>
-                <Typography>正解は「{ choices[answer] }」です！</Typography>
-              </Box>}
+              <Answer
+                isRightAnswer={isRightAnswer}
+                answer={choices[answerIndex]}
+              />
+            }
           </Box>
         </Box>
     </>
