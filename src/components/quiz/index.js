@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from "@mui/material"
 import { useState } from "react"
+import Answer from "../answer"
 
 const Quiz = ({datum}) => {
   const [answerIsShown, setAnswerIsShown] = useState(false)
@@ -68,18 +69,11 @@ const Quiz = ({datum}) => {
                 </Box>
               )
             })}
-            {Boolean(answerIsShown && isRightAnswer)
+            {
+              answerIsShown
               &&
-              <Box borderRadius={2} p={2} sx={{backgroundColor: '#f5f5f5'}}>
-                <Typography sx={{ fontWeight: 'bold', borderBottom: '3px solid #1976d2', display: 'block', width: 'fit-content', mb: 2 }}>正解！</Typography>
-                <Typography>正解は「{ choices[answer] }」です！</Typography>
-              </Box>}
-            {Boolean(answerIsShown && !isRightAnswer)
-              &&
-              <Box borderRadius={2} p={2} sx={{backgroundColor: '#f5f5f5'}}>
-                <Typography sx={{ fontWeight: 'bold', borderBottom: '3px solid #9c27b0', display: 'block', width: 'fit-content', mb: 2 }}>不正解！</Typography>
-                <Typography>正解は「{ choices[answer] }」です！</Typography>
-              </Box>}
+              <Answer isRightAnswer={isRightAnswer} answer={choices[answer]} />
+            }
           </Box>
         </Box>
     </>
