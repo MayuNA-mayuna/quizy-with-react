@@ -16,21 +16,20 @@ const Quiz = ({datum}) => {
   const choices = datum.choices
   const answer = datum.answer
 
-  const judgeAnswer = (choiceIndex) => {
+  const handleClick = (choiceIndex) => {
     if (answerIsShown) return
     setAnswerIsShown(true)
-    setButtonStyleFromAnswer(choiceIndex)
-    if (choiceIndex === answer) {
-      console.log('Right Answer!')
-      setIsRightAnswer(true)
-    }
+    judgeAnswer(choiceIndex)
   }
 
-  const setButtonStyleFromAnswer = (choiceIndex) => {
+  const judgeAnswer = (choiceIndex) => {
+    if (choiceIndex === answer) {
+      setIsRightAnswer(true)
+    }
     const buttonStyle = defaultButtonStyle
     const buttonStyleUpdated = buttonStyle.map((style, index) => {
       if (index === answer) return { variant: 'contained', color: 'primary' }
-      if (index === answer || choiceIndex === index) return { variant: 'contained', color: 'secondary' }
+      if (index === choiceIndex) return { variant: 'contained', color: 'secondary' }
       return style
     })
     setButtonStyle(buttonStyleUpdated)
@@ -62,7 +61,7 @@ const Quiz = ({datum}) => {
                       py: 1,
                       fontWeight: 'bold',
                     }}
-                    onClick={() => judgeAnswer(index)}
+                    onClick={() => handleClick(index)}
                   >
                     {choice}
                   </Button>
