@@ -1,6 +1,7 @@
-import { Box, Button, Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import { useState } from "react"
 import Answer from "../answer"
+import ChoiceList from "../choiceList"
 
 const Quiz = ({ datum }) => {
   const [answerIsShown, setAnswerIsShown] = useState(false)
@@ -50,29 +51,18 @@ const Quiz = ({ datum }) => {
             <img src={`/img/kuizy${("0" + id).slice(-2)}.png`} width="620" />
           </Box>
           <Box sx={{width: '100%'}}>
-            {choices.map((choice, index) => {
-              return (
-                <Box sx={{width: '100%', mb: 2}}>
-                  <Button
-                    variant={buttonStyle[index].variant}
-                    fullWidth={true}
-                    color={buttonStyle[index].color}
-                    sx={{
-                      justifyContent: 'start',
-                      py: 1,
-                      fontWeight: 'bold',
-                    }}
-                    onClick={() => handleClick(index)}
-                  >
-                    {choice}
-                  </Button>
-                </Box>
-              )
-            })}
+            <ChoiceList
+              choices={choices}
+              buttonStyle={buttonStyle}
+              handleClick={handleClick}
+            />
             {
               answerIsShown
               &&
-              <Answer isRightAnswer={isRightAnswer} answer={choices[answerIndex]} />
+              <Answer
+                isRightAnswer={isRightAnswer}
+                answer={choices[answerIndex]}
+              />
             }
           </Box>
         </Box>
