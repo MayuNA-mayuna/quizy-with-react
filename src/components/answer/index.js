@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material"
 const Answer = ({ isRightAnswer, answer }) => {
   return (
     <>
-      <Box borderRadius={2} p={2} sx={{backgroundColor: '#f5f5f5'}}>
+      <Box borderRadius={2} p={2} sx={{ backgroundColor: '#f5f5f5' }}>
         <Typography
           sx={{
             fontWeight: 'bold',
@@ -16,7 +16,7 @@ const Answer = ({ isRightAnswer, answer }) => {
           {!isRightAnswer && '不'}正解！
         </Typography>
         <Typography>
-          正解は「{answer}」です！
+          正解は「{ answer }」です！
         </Typography>
       </Box>
     </>

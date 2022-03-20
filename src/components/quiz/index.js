@@ -2,7 +2,7 @@ import { Box, Button, Typography } from "@mui/material"
 import { useState } from "react"
 import Answer from "../answer"
 
-const Quiz = ({datum}) => {
+const Quiz = ({ datum }) => {
   const [answerIsShown, setAnswerIsShown] = useState(false)
   const [isRightAnswer, setIsRightAnswer] = useState(false)
 
@@ -15,7 +15,7 @@ const Quiz = ({datum}) => {
 
   const id = datum.id
   const choices = datum.choices
-  const answer = datum.answer
+  const answerIndex = datum.answerIndex
 
   const handleClick = (choiceIndex) => {
     if (answerIsShown) return
@@ -24,12 +24,12 @@ const Quiz = ({datum}) => {
   }
 
   const judgeAnswer = (choiceIndex) => {
-    if (choiceIndex === answer) {
+    if (choiceIndex === answerIndex) {
       setIsRightAnswer(true)
     }
     const buttonStyle = defaultButtonStyle
     const buttonStyleUpdated = buttonStyle.map((style, index) => {
-      if (index === answer) return { variant: 'contained', color: 'primary' }
+      if (index === answerIndex) return { variant: 'contained', color: 'primary' }
       if (index === choiceIndex) return { variant: 'contained', color: 'secondary' }
       return style
     })
@@ -72,7 +72,7 @@ const Quiz = ({datum}) => {
             {
               answerIsShown
               &&
-              <Answer isRightAnswer={isRightAnswer} answer={choices[answer]} />
+              <Answer isRightAnswer={isRightAnswer} answer={choices[answerIndex]} />
             }
           </Box>
         </Box>
